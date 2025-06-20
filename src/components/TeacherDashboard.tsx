@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { 
-  BookOpen, 
-  Users, 
-  MessageSquare, 
-  Plus, 
-  BarChart3, 
+import {
+  BookOpen,
+  Users,
+  MessageSquare,
+  Plus,
+  BarChart3,
   Settings,
   Upload,
   Edit,
@@ -12,6 +12,7 @@ import {
   Eye
 } from 'lucide-react';
 
+// กำหนด type ของหนังสือ
 interface Book {
   id: string;
   title: string;
@@ -24,8 +25,11 @@ interface Book {
 }
 
 const TeacherDashboard = () => {
+  // state สำหรับเก็บแท็บที่เปิดอยู่
   const [activeTab, setActiveTab] = useState<'overview' | 'books' | 'analytics'>('overview');
+  // state สำหรับเปิด/ปิด modal เพิ่มหนังสือ
   const [showAddBookModal, setShowAddBookModal] = useState(false);
+  // state เก็บข้อมูลหนังสือ (เริ่มต้นมี 2 เล่ม)
   const [books, setBooks] = useState<Book[]>([
     {
       id: '1',
@@ -49,6 +53,7 @@ const TeacherDashboard = () => {
     }
   ]);
 
+  // คำนวณสถิติจากข้อมูลหนังสือ เช่น จำนวนหนังสือทั้งหมด, นักเรียนรวม, การสนทนารวม, คะแนนเฉลี่ย
   const stats = {
     totalBooks: books.length,
     totalStudents: books.reduce((sum, book) => sum + book.studentsCount, 0),
@@ -58,11 +63,13 @@ const TeacherDashboard = () => {
 
   const AddBookModal = () => (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      {/* กล่อง Modal */}
       <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b">
           <h3 className="text-xl font-bold text-gray-900">เพิ่มหนังสือใหม่</h3>
         </div>
         <div className="p-6 space-y-4">
+          {/* ช่องกรอกชื่อหนังสือ */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">ชื่อหนังสือ</label>
             <input
@@ -71,6 +78,7 @@ const TeacherDashboard = () => {
               placeholder="กรอกชื่อหนังสือ"
             />
           </div>
+          {/* ช่องกรอกผู้แต่ง */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">ผู้แต่ง</label>
             <input
@@ -79,6 +87,7 @@ const TeacherDashboard = () => {
               placeholder="กรอกชื่อผู้แต่ง"
             />
           </div>
+          {/* ช่องเลือกหมวดหมู่ */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">หมวดหมู่</label>
             <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
@@ -89,6 +98,7 @@ const TeacherDashboard = () => {
               <option value="language">ภาษา</option>
             </select>
           </div>
+          {/* ช่องกรอกคำอธิบายหนังสือ */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">คำอธิบาย</label>
             <textarea
@@ -97,24 +107,26 @@ const TeacherDashboard = () => {
               placeholder="กรอกคำอธิบายหนังสือ"
             />
           </div>
+          {/* ส่วนอัพโหลดไฟล์ PDF */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">อัพโหลดไฟล์หนังสือ (PDF)</label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors cursor-pointer">
               <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
               <p className="text-gray-600">ลากไฟล์มาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์</p>
               <p className="text-xs text-gray-500 mt-1">รองรับไฟล์ PDF เท่านั้น (ขนาดไม่เกิน 50MB)</p>
             </div>
           </div>
         </div>
+        {/* ปุ่มยกเลิกและเพิ่มหนังสือ */}
         <div className="p-6 border-t flex justify-end space-x-3">
           <button
-            onClick={() => setShowAddBookModal(false)}
+            onClick={() => setShowAddBookModal(false)} // ปิด modal เมื่อกดยกเลิก
             className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
           >
             ยกเลิก
           </button>
           <button className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
-            {/* 🔗 BACKEND CONNECTION: Upload book and process with AI */}
+            {/* TODO: เชื่อมต่อ Backend สำหรับอัพโหลดหนังสือและประมวลผล AI */}
             เพิ่มหนังสือ
           </button>
         </div>
@@ -124,17 +136,18 @@ const TeacherDashboard = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Teacher Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+      {/* Header แดชบอร์ด */}
+      <div className="bg-gradient-to-r from-blue-500 to-blue-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold">แดชบอร์ดอาจารย์</h1>
               <p className="text-purple-100 mt-1">จัดการหนังสือและติดตามการเรียนรู้ของนักเรียน</p>
             </div>
+            {/* ปุ่มเปิด modal เพิ่มหนังสือ */}
             <button
               onClick={() => setShowAddBookModal(true)}
-              className="mt-4 sm:mt-0 bg-white text-purple-600 px-4 py-2 rounded-lg font-medium hover:bg-purple-50 transition-colors flex items-center space-x-2"
+              className="mt-4 sm:mt-0 bg-white text-blue-800 px-4 py-2 rounded-lg font-medium hover:bg-purple-50 transition-colors flex items-center space-x-2"
             >
               <Plus className="h-5 w-5" />
               <span>เพิ่มหนังสือ</span>
@@ -143,7 +156,7 @@ const TeacherDashboard = () => {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
+      {/* แถบแท็บเมนู (Overview, Books, Analytics) */}
       <div className="bg-white border-b sticky top-16 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8 overflow-x-auto">
@@ -156,12 +169,11 @@ const TeacherDashboard = () => {
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center space-x-2 py-4 px-2 border-b-2 text-sm font-medium transition-colors whitespace-nowrap ${
-                    activeTab === tab.id
+                  onClick={() => setActiveTab(tab.id as any)} // สลับแท็บ
+                  className={`flex items-center space-x-2 py-4 px-2 border-b-2 text-sm font-medium transition-colors whitespace-nowrap ${activeTab === tab.id
                       ? 'border-purple-500 text-purple-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                    }`}
                 >
                   <Icon className="h-4 w-4" />
                   <span>{tab.label}</span>
@@ -172,12 +184,14 @@ const TeacherDashboard = () => {
         </div>
       </div>
 
+      {/* เนื้อหาหลักของแต่ละแท็บ */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Overview Tab */}
+        {/* แท็บภาพรวม (Overview) */}
         {activeTab === 'overview' && (
           <div className="space-y-8">
-            {/* Stats Cards */}
+            {/* กล่องแสดงสถิติ */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* จำนวนหนังสือ */}
               <div className="bg-white p-6 rounded-xl shadow-sm border border-purple-100">
                 <div className="flex items-center justify-between">
                   <div>
@@ -190,6 +204,7 @@ const TeacherDashboard = () => {
                 </div>
               </div>
 
+              {/* จำนวนรวมของนักเรียน */}
               <div className="bg-white p-6 rounded-xl shadow-sm border border-purple-100">
                 <div className="flex items-center justify-between">
                   <div>
@@ -202,6 +217,7 @@ const TeacherDashboard = () => {
                 </div>
               </div>
 
+              {/* จำนวนการสนทนา */}
               <div className="bg-white p-6 rounded-xl shadow-sm border border-purple-100">
                 <div className="flex items-center justify-between">
                   <div>
@@ -214,6 +230,7 @@ const TeacherDashboard = () => {
                 </div>
               </div>
 
+              {/* คะแนนเฉลี่ย */}
               <div className="bg-white p-6 rounded-xl shadow-sm border border-purple-100">
                 <div className="flex items-center justify-between">
                   <div>
@@ -227,7 +244,7 @@ const TeacherDashboard = () => {
               </div>
             </div>
 
-            {/* Recent Activity */}
+            {/* กิจกรรมล่าสุด (Recent Activity) */}
             <div className="bg-white rounded-xl shadow-sm p-6 border border-purple-100">
               <h3 className="text-lg font-bold text-gray-900 mb-4">กิจกรรมล่าสุด</h3>
               <div className="space-y-4">
@@ -249,7 +266,7 @@ const TeacherDashboard = () => {
           </div>
         )}
 
-        {/* Books Management Tab */}
+        {/* แท็บจัดการหนังสือ (Books Management) */}
         {activeTab === 'books' && (
           <div className="space-y-6">
             <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-purple-100">
@@ -281,23 +298,22 @@ const TeacherDashboard = () => {
                         <td className="px-6 py-4 text-sm text-gray-900">{book.chatsCount.toLocaleString()}</td>
                         <td className="px-6 py-4 text-sm text-gray-900">★ {book.rating}</td>
                         <td className="px-6 py-4">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            book.status === 'active' 
-                              ? 'bg-green-100 text-green-800' 
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${book.status === 'active'
+                              ? 'bg-green-100 text-green-800'
                               : 'bg-yellow-100 text-yellow-800'
-                          }`}>
+                            }`}>
                             {book.status === 'active' ? 'เปิดใช้งาน' : 'ร่าง'}
                           </span>
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex space-x-2">
-                            <button className="text-blue-600 hover:text-blue-800">
+                            <button className="text-blue-600 hover:text-blue-800" title="ดูรายละเอียด">
                               <Eye className="h-4 w-4" />
                             </button>
-                            <button className="text-green-600 hover:text-green-800">
+                            <button className="text-green-600 hover:text-green-800" title="แก้ไข">
                               <Edit className="h-4 w-4" />
                             </button>
-                            <button className="text-red-600 hover:text-red-800">
+                            <button className="text-red-600 hover:text-red-800" title="ลบ">
                               <Trash2 className="h-4 w-4" />
                             </button>
                           </div>
@@ -311,12 +327,13 @@ const TeacherDashboard = () => {
           </div>
         )}
 
-        {/* Analytics Tab */}
+        {/* แท็บวิเคราะห์ข้อมูล (Analytics) */}
         {activeTab === 'analytics' && (
           <div className="space-y-6">
             <div className="bg-white rounded-xl shadow-sm p-6 border border-purple-100">
               <h3 className="text-lg font-bold text-gray-900 mb-4">การวิเคราะห์การใช้งาน</h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* ส่วนหนังสือยอดนิยม */}
                 <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg">
                   <h4 className="font-semibold text-gray-900 mb-2">หนังสือยอดนิยม</h4>
                   <div className="space-y-2">
@@ -328,6 +345,7 @@ const TeacherDashboard = () => {
                     ))}
                   </div>
                 </div>
+                {/* ส่วน AI Analytics placeholder */}
                 <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-lg">
                   <h4 className="font-semibold text-gray-900 mb-2">🔗 AI Analytics</h4>
                   <ul className="text-sm text-gray-700 space-y-1">
@@ -343,7 +361,7 @@ const TeacherDashboard = () => {
         )}
       </div>
 
-      {/* Add Book Modal */}
+      {/* แสดง modal เพิ่มหนังสือ เมื่อ state showAddBookModal เป็น true */}
       {showAddBookModal && <AddBookModal />}
     </div>
   );

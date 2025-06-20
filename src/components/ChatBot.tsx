@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Book, Sparkles, BookOpen, Play } from 'lucide-react';
 
-interface Message {
+interface Message { // อินเทอร์เฟซสำหรับข้อความในแชท
   id: string;
   text: string;
   isBot: boolean;
   timestamp: Date;
 }
 
-interface ChatBotProps {
+interface ChatBotProps { // อินเทอร์เฟซสำหรับ props ที่รับเข้ามาใน ChatBot
   selectedBook?: {
     id: string;
     title: string;
@@ -30,12 +30,12 @@ const ChatBot: React.FC<ChatBotProps> = ({
   onBookSelect,
   onReadBook
 }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputText, setInputText] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]); // สถานะข้อความทั้งหมดในแชท
+  const [inputText, setInputText] = useState(''); // สถานะข้อความที่ผู้ใช้พิมพ์
+  const [isTyping, setIsTyping] = useState(false);  // สถานะว่า AI กำลังพิมพ์อยู่หรือไม่
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Mock books for selection
+  // 📚 หนังสือจำลองที่ใช้ตอนยังไม่เลือกหนังสือจริง
   const availableBooks = [
     { id: '1', title: 'วิทยาศาสตร์น่ารู้ ชั้นมัธยมศึกษาตอนต้น', author: 'ดร.สมชาย วิทยาคม' },
     { id: '2', title: 'คณิตศาสตร์พื้นฐานเพื่อชีวิต', author: 'อาจารย์สมหญิง เลขคณิต' },
@@ -50,6 +50,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
   //   scrollToBottom();
   // }, [messages]);
 
+  // เมื่อโหลด component ครั้งแรก แสดงข้อความต้อนรับ
   useEffect(() => {
     const welcomeMessage: Message = {
       id: Date.now().toString(),
@@ -67,7 +68,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
     setMessages([welcomeMessage]);
   }, [selectedBook, currentPage]);
 
-
+  // เมื่อผู้ใช้กดส่งข้อความ
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
 
@@ -101,6 +102,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
     }
   };
 
+  // จำลองการตอบกลับจาก AI
   const generateMockResponse = (
     input: string,
     book?: { title: string; author: string },
@@ -128,6 +130,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
     }
   };
 
+  // ส่งข้อความเมื่อกด Enter โดยไม่กด Shift
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -135,6 +138,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
     }
   };
 
+  // สร้าง Quick Actions ตามบริบท
   const getQuickActions = () => {
     if (currentPage && currentContent) {
       return [
@@ -203,7 +207,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
       )}  */}
 
 
-      {/* Selected Book Info */}
+      {/* แสดงข้อมูลหนังสือที่เลือกไว้ */}
       {selectedBook && (
         <div className="p-4 border-b bg-gradient-to-r from-green-50 to-blue-50">
           <div className="flex items-center justify-between">
@@ -229,7 +233,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
         </div>
       )}
 
-      {/* Messages */}
+      {/* แสดงข้อความในแชท */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
         {messages.map((message) => (
           <div
@@ -264,6 +268,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
           </div>
         ))}
 
+        {/* แสดงจุดสามจุดขณะ AI กำลังพิมพ์ */}
         {isTyping && (
           <div className="flex justify-start">
             <div className="bg-gray-100 p-3 rounded-lg">
@@ -281,7 +286,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
+      {/* กล่องพิมพ์ข้อความและปุ่มส่ง */}
       <div className="border-t p-4">
         <div className="flex space-x-2">
           <textarea
@@ -301,6 +306,7 @@ const ChatBot: React.FC<ChatBotProps> = ({
           </button>
         </div>
 
+        {/* ปุ่มคำถามด่วน */}
         <div className="mt-3 flex flex-wrap gap-2">
           {getQuickActions().map((action, index) => (
             <button

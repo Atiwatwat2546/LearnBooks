@@ -1,34 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, MessageSquare, BookOpen, ZoomIn, ZoomOut, RotateCcw, Bot, CheckCircle, Home } from 'lucide-react';
-import ChatBot from './ChatBot';
+import React, { useState, useEffect } from 'react'; // นำเข้า React และ Hook ต่างๆ ที่จำเป็น
+import { ArrowLeft, MessageSquare, BookOpen, ZoomIn, ZoomOut, RotateCcw, Bot, CheckCircle, Home } from 'lucide-react';// นำเข้าไอคอนจาก lucide-react
+import ChatBot from './ChatBot'; // นำเข้าคอมโพเนนต์ ChatBot
 
-interface BookReaderProps {
+// ประกาศประเภทของ props ที่จะรับเข้ามา
+interface BookReaderProps { 
   book: {
     id: string;
     title: string;
     author: string;
   };
-  onBack: () => void;
-  onBackToLibrary: () => void;
+  onBack: () => void; // ฟังก์ชันสำหรับกลับไปหน้าเดิม
+  onBackToLibrary: () => void; // ฟังก์ชันสำหรับกลับไปยังห้องสมุด
 }
 
+// คอมโพเนนต์หลัก BookReader
 const BookReader: React.FC<BookReaderProps> = ({ book, onBack, onBackToLibrary }) => {
-  const [showChat, setShowChat] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [zoom, setZoom] = useState(100);
-  const [totalPages] = useState(45); // Mock total pages
-  const [isFinished, setIsFinished] = useState(false);
+  const [showChat, setShowChat] = useState(false); // สถานะสำหรับแสดงหรือซ่อน AI Chat
+  const [currentPage, setCurrentPage] = useState(1); // สถานะสำหรับเก็บหน้าปัจจุบันที่อ่านอยู่
+  const [zoom, setZoom] = useState(100); // สถานะการซูม (ปรับขนาดตัวหนังสือ)
+  const [totalPages] = useState(45); // จำนวนหน้าทั้งหมดของหนังสือ (mock แบบจำลองไว้ 45 หน้า)
+  const [isFinished, setIsFinished] = useState(false); // ตรวจสอบว่าผู้อ่านอ่านจบหรือยัง
 
-  // Check if book is finished when reaching last page
+  // useEffect จะทำงานเมื่อ currentPage เปลี่ยน
   useEffect(() => {
-    if (currentPage >= totalPages) {
+    if (currentPage >= totalPages) { // ถ้าอ่านถึงหน้าสุดท้ายให้ถือว่าอ่านจบ
       setIsFinished(true);
     } else {
       setIsFinished(false);
     }
   }, [currentPage, totalPages]);
 
-  // Mock book content - in real app, this would come from API/PDF
+  // เนื้อหาหนังสือตัวอย่างแบบ mock , this would come from API/PDF
   const mockContent = {
     1: {
       title: "บทที่ 1: การเคลื่อนที่ของวัตถุ",
@@ -73,28 +75,32 @@ a = (v₂ - v₁) ÷ t
 ระยะทางที่รถเคลื่อนที่ได้ = 60 × 2 = 120 กิโลเมตร`
     }
   };
-
+ 
+  // ฟังก์ชันดึงเนื้อหาปัจจุบันตามหน้าที่กำลังอ่าน
   const getCurrentContent = () => {
     return mockContent[currentPage as keyof typeof mockContent] || {
       title: `หน้า ${currentPage}`,
       content: "เนื้อหาของหน้านี้กำลังโหลด..."
     };
   };
-
+  
+  // ฟังก์ชันสำหรับควบคุมการซูม
   const handleZoomIn = () => setZoom(prev => Math.min(prev + 25, 200));
   const handleZoomOut = () => setZoom(prev => Math.max(prev - 25, 50));
   const handleResetZoom = () => setZoom(100);
 
-  // Finished Book Component
+  // แสดงหน้าจอเมื่ออ่านหนังสือจบแล้ว
   if (isFinished) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-teal-50 flex items-center justify-center">
         <div className="max-w-2xl mx-auto px-4 text-center">
           <div className="bg-white rounded-3xl shadow-2xl p-8 sm:p-12">
+            {/* ไอคอนสำเร็จ */}
             <div className="mb-8">
               <div className="w-24 h-24 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
                 <CheckCircle className="h-12 w-12 text-white" />
               </div>
+              {/* ข้อความแสดงความยินดี */}
               <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                 🎉 ยินดีด้วย!
               </h1>
@@ -111,6 +117,7 @@ a = (v₂ - v₁) ÷ t
               </p>
             </div>
 
+            {/* ปุ่มเลือกหนังสือเล่มใหม่หรืออ่านซ้ำ */}
             <div className="space-y-4">
               <button
                 onClick={onBackToLibrary}
@@ -132,7 +139,7 @@ a = (v₂ - v₁) ÷ t
               </button>
             </div>
 
-            {/* 🔗 BACKEND CONNECTION: Mark book as completed */}
+            {/* 🔗 จุดเชื่อมต่อกับ backend */}
             <div className="mt-8 p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
               <p className="text-sm text-green-700">
                 🔗 <strong>Backend Connection:</strong> บันทึกความสำเร็จในการอ่านหนังสือจบ
@@ -144,6 +151,7 @@ a = (v₂ - v₁) ÷ t
     );
   }
 
+  // ส่วนหลักของหน้าจออ่านหนังสือ
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header */}
@@ -167,7 +175,8 @@ a = (v₂ - v₁) ÷ t
                 </div>
               </div>
             </div>
-
+            
+            {/* ปุ่มควบคุมซูม และ AI Chat */}
             <div className="flex items-center space-x-2 sm:space-x-4">
               {/* Zoom Controls */}
               <div className="hidden sm:flex items-center space-x-1 bg-gray-100 rounded-lg p-1">
@@ -195,7 +204,7 @@ a = (v₂ - v₁) ÷ t
                 </button>
               </div>
 
-              {/* AI Chat Toggle */}
+              {/* ปุ่มเปิด/ปิด AI */}
               <button
                 onClick={() => setShowChat(!showChat)}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-lg font-medium transition-all ${
@@ -212,12 +221,13 @@ a = (v₂ - v₁) ÷ t
         </div>
       </div>
 
+      {/* เนื้อหาและ ChatBot */}
       <div className="flex h-[calc(100vh-4rem)]">
-        {/* Book Content */}
+        {/* ส่วนแสดงเนื้อหาหนังสือ */}
         <div className={`transition-all duration-300 ${showChat ? 'w-1/2' : 'w-full'}`}>
           <div className="h-full overflow-y-auto">
             <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-              {/* Page Navigation */}
+              {/* ปุ่มเปลี่ยนหน้า */}
               <div className="flex items-center justify-between mb-6 bg-white rounded-lg p-4 shadow-sm">
                 <button
                   onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
@@ -248,7 +258,7 @@ a = (v₂ - v₁) ÷ t
                 </button>
               </div>
 
-              {/* Book Content */}
+              {/* แสดงเนื้อหาหนังสือ */}
               <div 
                 className="bg-white rounded-xl shadow-lg p-6 sm:p-8 lg:p-12 min-h-[600px]"
                 style={{ fontSize: `${zoom}%` }}
@@ -262,7 +272,7 @@ a = (v₂ - v₁) ÷ t
                   </div>
                 </div>
 
-                {/* 🔗 BACKEND CONNECTION: Load actual book content from database */}
+                {/* 🔗 คอมเมนต์: จุดเชื่อมต่อกับ backend สำหรับโหลดเนื้อหา */}
                 <div className="mt-8 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
                   <p className="text-sm text-blue-700">
                     🔗 <strong>Backend Connection:</strong> เนื้อหาหนังสือจะถูกดึงจาก Database/PDF Processing API
@@ -270,7 +280,7 @@ a = (v₂ - v₁) ÷ t
                 </div>
               </div>
 
-              {/* Quick Actions */}
+              {/* ปุ่มเปิด AI */}
               <div className="mt-6 flex flex-wrap gap-3 justify-center">
                 <button
                   onClick={() => setShowChat(true)}
@@ -284,7 +294,7 @@ a = (v₂ - v₁) ÷ t
           </div>
         </div>
 
-        {/* AI Chat Sidebar */}
+        {/* Sidebar แชทกับ AI */}
         {showChat && (
           <div className="w-1/2 border-l bg-white">
             <div className="h-full flex flex-col">
@@ -302,6 +312,7 @@ a = (v₂ - v₁) ÷ t
                   ถามคำถามเกี่ยวกับ "{book.title}" หน้า {currentPage}
                 </p>
               </div>
+              {/* เนื้อหาแชท */}
               <div className="flex-1">
                 <ChatBot 
                   selectedBook={book} 

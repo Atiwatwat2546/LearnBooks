@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { BarChart3, BookOpen, MessageCircle, TrendingUp, Users } from 'lucide-react';
 
+//  Dashboard แสดงภาพรวมของระบบ
 const Dashboard = () => {
-  const [stats] = useState({
+  const [stats] = useState({ // ใช้ useState สำหรับเก็บค่าสถิติเบื้องต้น (mock data)
     totalBooks: 156,
     totalStudents: 2847,
     totalChats: 12439,
@@ -12,13 +13,16 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Section: Header */}
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">ภาพรวมระบบ</h2>
           <p className="text-gray-600">สถิติการใช้งานแพลตฟอร์มการเรียนรู้</p>
         </div>
 
-        {/* Stats Cards */}
+        {/* Section: การ์ดสถิติ 4 ช่อง */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* การ์ด: จำนวนหนังสือทั้งหมด */}
           <div className="bg-white p-6 rounded-xl shadow-sm border border-green-100">
             <div className="flex items-center justify-between">
               <div>
@@ -31,6 +35,7 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {/* การ์ด: จำนวนผู้ใช้งาน */}
           <div className="bg-white p-6 rounded-xl shadow-sm border border-green-100">
             <div className="flex items-center justify-between">
               <div>
@@ -43,6 +48,7 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {/* การ์ด: จำนวนบทสนทนาทั้งหมด */}
           <div className="bg-white p-6 rounded-xl shadow-sm border border-green-100">
             <div className="flex items-center justify-between">
               <div>
@@ -55,6 +61,7 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {/* การ์ด: คะแนนเฉลี่ย */}
           <div className="bg-white p-6 rounded-xl shadow-sm border border-green-100">
             <div className="flex items-center justify-between">
               <div>
@@ -68,7 +75,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Database Connection Highlights */}
+        {/* Section: Backend/Database Features Highlight */}
         <div className="bg-gradient-to-r from-blue-600 to-teal-600 text-white p-6 rounded-xl shadow-lg mb-8">
           <div className="flex items-center space-x-3 mb-4">
             <BarChart3 className="h-8 w-8" />
